@@ -94,7 +94,7 @@
                 <label for="newpassword2">New password again:</label>
                 <input type="password" class="form-control" id="newpassword2" name="newpassword2" required />
               </div>
-              <button type="submit" class="btn btn-primary btn-block">Change password</button>
+              <button type="submit" class="btn btn-primary btn-block" id="change-button">Change password</button>
             </form>
             <div class="text-center">
               <a href="#welcome" class="btn btn-success">Go back</a>
@@ -126,12 +126,16 @@
       (function() {
         const loginForm = document.getElementById('login-form');
         const signupForm = document.getElementById('signup-form');
+        const changeForm = document.getElementById('change-form');
+        const changeButton = document.getElementById('change-button');
         const logoutButton = document.getElementById('logout-button');
         const welcomeUsernameElement = document.getElementById('welcome-username');
         let currentUser;
 
         loginForm.addEventListener('submit', handleSubmit);
         signupForm.addEventListener('submit', handleSubmit);
+        changeForm.addEventListener('submit', handleChangeSubmit);
+        changeButton.addEventListener('click', handleChangeClick);
         logoutButton.addEventListener('click', handleLogoutClick);
         checkLoginStatus();
 
@@ -141,6 +145,31 @@
           this.email.value = '';
           this.password.value = '';
           checkLoginStatus();
+        }
+
+        function handleChangeClick(event) {
+          if (changeForm.oldpassword.value == changeForm.newpassword1.value) {
+            changeForm.newpassword1.setCustomValidity('New password can not be same as old password.');
+          }
+          else {
+            changeForm.newpassword1.setCustomValidity('');
+          }
+          if (changeForm.newpassword1.value != changeForm.newpassword2.value) {
+            changeForm.newpassword2.setCustomValidity('Passwords do not match.');
+          }
+          else {
+            changeForm.newpassword2.setCustomValidity('');
+          }
+        }
+
+        function handleChangeSubmit(event) {
+          event.preventDefault();
+          if (this.reportValidity()) {
+            this.oldpassword.value = '';
+            this.newpassword1.value = '';
+            this.newpassword2.value = '';
+            window.location.href = '#welcome';
+          }
         }
 
         function handleLogoutClick() {
